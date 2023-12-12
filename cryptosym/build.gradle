@@ -1,0 +1,20 @@
+plugins {
+    id 'application'
+}
+
+apply from: '../group-version.gradle'
+apply from: '../compatibility.gradle'
+apply from: '../repositories.gradle'
+apply from: '../common-dependencies.gradle'
+
+compileJava {
+    doFirst {
+        classpath += sourceSets.main.compileClasspath
+
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'ALL-SYSTEM',
+                '-d', sourceSets.main.output.classesDirs.asPath
+        ]
+    }
+}

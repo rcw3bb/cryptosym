@@ -1,0 +1,3 @@
+rootProject.name = 'cryptosym'
+
+include 'cryptosym', 'cryptosym-gui'
