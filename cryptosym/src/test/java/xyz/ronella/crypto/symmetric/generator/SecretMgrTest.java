@@ -22,7 +22,7 @@ public class SecretMgrTest {
     @Test
     public void testRestoreDefault() throws NoSuchAlgorithmException {
         final var keyString = SecretMgr.generateKeyAsString();
-        final var secretKey =  SecretMgr.restoreAESKey(keyString);
+        final var secretKey =  SecretMgr.restoreKey(keyString);
         final var fromSecretKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
         assertEquals(keyString, fromSecretKey);
     }

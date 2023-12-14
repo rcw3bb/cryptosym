@@ -2,6 +2,12 @@ package xyz.ronella.crypto.symmetric.util.impl;
 
 import java.util.Optional;
 
+/**
+ * An implementation of KeyResolver that can use a property to identify the environment variable that holds the key.
+ *
+ * @author Ron Webb
+ */
+
 public class EnvAsKeyByProp extends AbstractKeyChain {
     public EnvAsKeyByProp(String keyHolder) {
         super(keyHolder);

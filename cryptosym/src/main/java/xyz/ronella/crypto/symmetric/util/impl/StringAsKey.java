@@ -2,6 +2,11 @@ package xyz.ronella.crypto.symmetric.util.impl;
 
 import java.util.Optional;
 
+/**
+ * An implementation of KeyResolver that treats the acquired key as the actual key.
+ *
+ * @author Ron Webb
+ */
 public class StringAsKey extends AbstractKeyChain {
 
     final private String key;

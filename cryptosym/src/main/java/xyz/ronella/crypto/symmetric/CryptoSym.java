@@ -11,11 +11,16 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Objects;
 
+/**
+ * The main class the actually do encryption and decryption.
+ *
+ * @author Ron Webb
+ */
 public final class CryptoSym {
     private final static String DEFAULT_TRANSFORMATION = "AES/GCM/NoPadding";
     private final static int IV_SIZE_BYTE = 12; //The size of IV in byte size.
     private final static int IV_SIZE_BIT = 96; // The number of bits in IV_SIZE_BYTE.
-    private final static int IV_SPLIT_PREFIX = 6; //The size of the IV that will become a prefix. The value must be 0 to 12 only.
+    private final static int IV_SPLIT_PREFIX = 3; //The size of the IV that will become a prefix. The value must be 0 to 12 only.
     private final static int IV_SPLIT_SUFFIX = IV_SIZE_BYTE - IV_SPLIT_PREFIX; // The size of the IV that will become a suffix.
 
     private CryptoSym() {}
@@ -28,7 +33,7 @@ public final class CryptoSym {
             final var cipher = Cipher.getInstance(DEFAULT_TRANSFORMATION);
             final var iv = generateRandomIV();
             final var parameterSpec = new GCMParameterSpec(IV_SIZE_BIT, iv);
-            final var secretKey = SecretMgr.restoreAESKey(key);
+            final var secretKey = SecretMgr.restoreKey(key);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, parameterSpec);
 
             final var plaintext = plainText.getBytes(StandardCharsets.UTF_8);
@@ -58,10 +63,23 @@ public final class CryptoSym {
         return result;
     }
 
+    /**
+     * Does the encryption based on the key provided by an implementation of KeyResolver.
+     *
+     * @param keyResolver An implementation of KeyResolver.
+     * @param text The text to encrypt.
+     * @return The encrypted text.
+     */
     public static String encrypt(final KeyResolver keyResolver, final String text) {
         return encrypt(keyResolver.resolve(), text);
     }
 
+    /**
+     * Does the encryption based on the key provided by the KeyChain implementation of KeyResolver.
+     *
+     * @param text The text to encrypt.
+     * @return The encrypted text.
+     */
     public static String encrypt(final String text) {
         return encrypt(new KeyChain(), text);
     }
@@ -76,7 +94,7 @@ public final class CryptoSym {
             final var iv = extractIV(cipherText);
             final var ciphertext = extractCiphertext(cipherText, iv.length);
             final var parameterSpec = new GCMParameterSpec(IV_SIZE_BIT, iv);
-            final var secretKey = SecretMgr.restoreAESKey(key);
+            final var secretKey = SecretMgr.restoreKey(key);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, parameterSpec);
 
             final var decryptedBytes = cipher.doFinal(ciphertext);
@@ -88,10 +106,23 @@ public final class CryptoSym {
         }
     }
 
+    /**
+     * Does the decryption based on the key provided by an implementation of KeyResolver.
+     *
+     * @param keyResolver An implementation of KeyResolver.
+     * @param encryptedText The encrypted text.
+     * @return The plain text.
+     */
     public static String decrypt(final KeyResolver keyResolver, final String encryptedText) {
         return decrypt(keyResolver.resolve(), encryptedText);
     }
 
+    /**
+     * Does the decryption based on the key provided by the KeyChain implementation of KeyResolver.
+     *
+     * @param encryptedText The encrypted text.
+     * @return The plain text.
+     */
     public static String decrypt(final String encryptedText) {
         return decrypt(new KeyChain(), encryptedText);
     }
