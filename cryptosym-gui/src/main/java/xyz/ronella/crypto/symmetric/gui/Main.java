@@ -20,9 +20,9 @@ public class Main extends Application {
         Parent root = loader.load();
         primaryStage.getIcons().add(Images.ICON);
         primaryStage.setTitle(Invoker.generate(new ApplicationTitle()));
-        //PrintText.print("Processing Hello world");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

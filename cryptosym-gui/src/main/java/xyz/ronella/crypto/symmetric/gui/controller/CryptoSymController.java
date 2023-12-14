@@ -85,6 +85,7 @@ public class CryptoSymController implements Initializable {
             stage.setTitle(Invoker.generate(new ApplicationTitle()));
             Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.show();
         }
