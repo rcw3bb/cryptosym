@@ -20,7 +20,7 @@ public final class CryptoSym {
 
     private CryptoSym() {}
 
-    public static String encrypt(final String key, final String plainText) {
+    private static String encrypt(final String key, final String plainText) {
         try {
             Objects.requireNonNull(key, "key parameter cannot be null");
             Objects.requireNonNull(plainText, "plainText parameter cannot be null");
@@ -33,24 +33,29 @@ public final class CryptoSym {
 
             final var plaintext = plainText.getBytes(StandardCharsets.UTF_8);
             final var ciphertext = cipher.doFinal(plaintext);
-
-            // Split the IV into two parts
-            final var firstPart = new byte[IV_SPLIT_PREFIX];
-            final var secondPart = new byte[IV_SPLIT_SUFFIX];
-            System.arraycopy(iv, 0, firstPart, 0, IV_SPLIT_PREFIX);
-            System.arraycopy(iv, IV_SPLIT_PREFIX, secondPart, 0, IV_SPLIT_SUFFIX);
-
-            // Prepend the first part and append the second part to the ciphertext
-            byte[] result = new byte[ciphertext.length + firstPart.length + secondPart.length];
-            System.arraycopy(firstPart, 0, result, 0, firstPart.length);
-            System.arraycopy(ciphertext, 0, result, firstPart.length, ciphertext.length);
-            System.arraycopy(secondPart, 0, result, firstPart.length + ciphertext.length, secondPart.length);
+            final var result = infuseWithIV(iv, ciphertext);
 
             return Base64.getEncoder().encodeToString(result);
         }
         catch (Exception exp) {
             throw new RuntimeException(exp);
         }
+    }
+
+    private static byte[] infuseWithIV(byte[] iv, byte[] ciphertext) {
+        // Split the IV into two parts
+        final var firstPart = new byte[IV_SPLIT_PREFIX];
+        final var secondPart = new byte[IV_SPLIT_SUFFIX];
+        System.arraycopy(iv, 0, firstPart, 0, IV_SPLIT_PREFIX);
+        System.arraycopy(iv, IV_SPLIT_PREFIX, secondPart, 0, IV_SPLIT_SUFFIX);
+
+        // Prepend the first part and append the second part to the ciphertext
+        byte[] result = new byte[ciphertext.length + firstPart.length + secondPart.length];
+        System.arraycopy(firstPart, 0, result, 0, firstPart.length);
+        System.arraycopy(ciphertext, 0, result, firstPart.length, ciphertext.length);
+        System.arraycopy(secondPart, 0, result, firstPart.length + ciphertext.length, secondPart.length);
+
+        return result;
     }
 
     public static String encrypt(final KeyResolver keyResolver, final String text) {
@@ -61,7 +66,7 @@ public final class CryptoSym {
         return encrypt(new KeyChain(), text);
     }
 
-    public static String decrypt(final String key, final String encryptedText) {
+    private static String decrypt(final String key, final String encryptedText) {
         try {
             Objects.requireNonNull(key, "key parameter cannot be null");
             Objects.requireNonNull(encryptedText, "encryptedText parameter cannot be null");
