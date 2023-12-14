@@ -2,6 +2,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
 import java.util.stream.Stream
+import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'org.openjfx.javafxplugin' version '0.0.12'
@@ -36,6 +37,15 @@ javafx {
 }
 
 processResources {
+    filesMatching('version.properties') {
+        filter(ReplaceTokens, tokens: [
+                'MAJOR_VERSION': MAJOR_VERSION
+                ,'MINOR_VERSION': MINOR_VERSION
+                ,'MAINTENANCE_VERSION': MAINTENANCE_VERSION
+                ,'BUILD_VERSION': BUILD_VERSION
+        ])
+    }
+
     def resources = ['fxml', 'xml', 'png', 'properties']
     doFirst {
         sourceSets.main.output.asList().stream()
@@ -47,6 +57,7 @@ processResources {
 
             copy {
                 from(sourceDir) {
+                    exclude 'version.properties'
                     include resources.stream().map{ ___ext -> "**/*.${___ext}"}.collect(Collectors.toList())
                 }
                 into(destinationDir)
@@ -60,8 +71,10 @@ processResources {
 
             Stream<Path> stream = Files.walk(Paths.get(_1_file.path))
             try {
-                def fileToDelete = stream.filter{___path -> Files.isRegularFile(___path) &&
-                        resources.stream().any {___ext -> ___path.toFile().path.endsWith(___ext)}
+                def fileToDelete = stream.filter{___path ->
+                    Files.isRegularFile(___path)
+                            && resources.stream().any {___ext -> ___path.toFile().path.endsWith(___ext)}
+                            && !___path.endsWith("version.properties")
                 }.map{___path -> ___path.toFile()}
                             .collect(Collectors.toList()).toArray()
 
@@ -122,8 +135,9 @@ task preparePackage(dependsOn: ['jlink']) {
 task packWin(dependsOn: ['preparePackage']) {
     doLast{
         def projectName = "${project.name}-${version}"
-        def jlinkOutputDir = Paths.get(buildDir.absolutePath, projectName)
-        def outputFile =  Paths.get(buildDir.absolutePath, "pack", "${projectName}-win64.zip")
+        def buildDirPath = layout.buildDirectory.asFile.get().absolutePath
+        def jlinkOutputDir = Paths.get(buildDirPath, projectName)
+        def outputFile =  Paths.get(buildDirPath, "pack", "${projectName}-win64.zip")
 
         ant.zip(destfile: outputFile) {
             fileset(dir: jlinkOutputDir)

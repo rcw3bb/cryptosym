@@ -1,2 +1,6 @@
+{
+    ext.CALCULATED_BUILD = BUILD_VERSION.isBlank() ? "" : "-${BUILD_VERSION}"
+}
+
 group 'xyz.ronella.crypto'
-version '1.0.0-SNAPSHOT'
+version "${MAJOR_VERSION}.${MINOR_VERSION}.${MAINTENANCE_VERSION}${CALCULATED_BUILD}"
