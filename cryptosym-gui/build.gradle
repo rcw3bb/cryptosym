@@ -5,8 +5,8 @@ import java.util.stream.Stream
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id 'org.openjfx.javafxplugin' version '0.0.12'
-    id 'org.beryx.jlink' version '2.24.4'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.beryx.jlink' version '3.0.1'
 }
 
 apply from: '../group-version.gradle'
@@ -33,7 +33,7 @@ application {
 
 javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
-    version = '17'
+    version = '21'
 }
 
 processResources {
