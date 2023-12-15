@@ -126,6 +126,7 @@ public class CryptoSymController implements Initializable {
             txtInput.setStyle(calcTextBackground(COLOR_LIGHT_GREEN));
         }
         catch (Exception exp) {
+            LOG.error(LOG.getStackTraceAsString(exp));
             txtInput.setStyle(calcTextBackground(COLOR_LIGHT_RED));
         }
     }

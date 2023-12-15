@@ -25,7 +25,7 @@ public final class CryptoSym {
 
     private CryptoSym() {}
 
-    private static String encrypt(final String key, final String plainText) {
+    private static String encrypt(final String key, final String plainText) throws CryptoSymException {
         try {
             Objects.requireNonNull(key, "key parameter cannot be null");
             Objects.requireNonNull(plainText, "plainText parameter cannot be null");
@@ -43,7 +43,7 @@ public final class CryptoSym {
             return Base64.getEncoder().encodeToString(result);
         }
         catch (Exception exp) {
-            throw new RuntimeException(exp);
+            throw new CryptoSymException(exp);
         }
     }
 
@@ -70,7 +70,7 @@ public final class CryptoSym {
      * @param text The text to encrypt.
      * @return The encrypted text.
      */
-    public static String encrypt(final KeyResolver keyResolver, final String text) {
+    public static String encrypt(final KeyResolver keyResolver, final String text) throws CryptoSymException {
         return encrypt(keyResolver.resolve(), text);
     }
 
@@ -80,11 +80,11 @@ public final class CryptoSym {
      * @param text The text to encrypt.
      * @return The encrypted text.
      */
-    public static String encrypt(final String text) {
+    public static String encrypt(final String text) throws CryptoSymException {
         return encrypt(new KeyChain(), text);
     }
 
-    private static String decrypt(final String key, final String encryptedText) {
+    private static String decrypt(final String key, final String encryptedText) throws CryptoSymException {
         try {
             Objects.requireNonNull(key, "key parameter cannot be null");
             Objects.requireNonNull(encryptedText, "encryptedText parameter cannot be null");
@@ -102,7 +102,7 @@ public final class CryptoSym {
             return new String(decryptedBytes, StandardCharsets.UTF_8);
         }
         catch (Exception exp) {
-            throw new RuntimeException(exp);
+            throw new CryptoSymException(exp);
         }
     }
 
@@ -113,7 +113,7 @@ public final class CryptoSym {
      * @param encryptedText The encrypted text.
      * @return The plain text.
      */
-    public static String decrypt(final KeyResolver keyResolver, final String encryptedText) {
+    public static String decrypt(final KeyResolver keyResolver, final String encryptedText) throws CryptoSymException {
         return decrypt(keyResolver.resolve(), encryptedText);
     }
 
@@ -123,7 +123,7 @@ public final class CryptoSym {
      * @param encryptedText The encrypted text.
      * @return The plain text.
      */
-    public static String decrypt(final String encryptedText) {
+    public static String decrypt(final String encryptedText) throws CryptoSymException {
         return decrypt(new KeyChain(), encryptedText);
     }
 

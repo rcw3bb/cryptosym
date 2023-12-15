@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CryptoSymTest {
 
     @Test
-    public void encDecWithKeyParameter() throws NoSuchAlgorithmException {
+    public void encDecWithKeyParameter() throws NoSuchAlgorithmException, CryptoSymException {
         final var text = "TEST_ONLY";
         final var key = new StringAsKey(SecretMgr.generateKeyAsString());
         final var encryptedText = CryptoSym.encrypt(key, text);
@@ -46,7 +46,7 @@ public class CryptoSymTest {
     }
 
     @Test
-    public void encDecProperty() throws NoSuchAlgorithmException {
+    public void encDecProperty() throws NoSuchAlgorithmException, CryptoSymException {
         final var text = "TEST_ONLY";
         final var key = SecretMgr.generateKeyAsString();
         System.setProperty("cryptosym.key", key);
@@ -57,7 +57,7 @@ public class CryptoSymTest {
 
     @Test
     @Disabled //Enable this test if you've set CRYPTOSYM_KEY environment variable with a proper key.
-    public void encDecEnv() {
+    public void encDecEnv() throws CryptoSymException {
         final var text = "TEST_ONLY";
         System.out.println("CRYPTOSYM_KEY: " + System.getenv("CRYPTOSYM_KEY"));
         final var encryptedText = CryptoSym.encrypt(text);
@@ -67,7 +67,7 @@ public class CryptoSymTest {
 
     @Test
     @Disabled //Enable this test if you've set DUMMY_KEY environment variable with a proper key.
-    public void encDecKeyHolder() {
+    public void encDecKeyHolder() throws CryptoSymException {
         final var text = "TEST_ONLY";
         System.setProperty("cryptosym.keyholder", "DUMMY_KEY");
         final var encryptedText = CryptoSym.encrypt(text);
