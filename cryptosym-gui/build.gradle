@@ -111,11 +111,12 @@ jlink {
 
 task preparePackage(dependsOn: ['jlink']) {
     doLast {
+        def buildDirPath = layout.buildDirectory.asFile.get().absolutePath
         def projectName = "${project.name}-${version}"
         def batchFile = "${project.name}.bat"
-        def batchPath = Paths.get(buildDir.absolutePath, projectName, batchFile).toFile()
+        def batchPath = Paths.get(buildDirPath, projectName, batchFile).toFile()
 
-        def jlinkTargetDir = Paths.get(buildDir.absolutePath, projectName)
+        def jlinkTargetDir = Paths.get(buildDirPath, projectName)
         def jlinkConfDir = Paths.get(jlinkTargetDir.toFile().absolutePath, "conf")
 
         def log4jFile = "log4j2.xml"
@@ -125,8 +126,8 @@ task preparePackage(dependsOn: ['jlink']) {
         def outputResources = sourceSets.main.output.resourcesDir
 
         copy {
-            from(Paths.get(buildDir.absolutePath, projectName, "bin"))
-            into(Paths.get(buildDir.absolutePath, projectName))
+            from(Paths.get(buildDirPath, projectName, "bin"))
+            into(Paths.get(buildDirPath, projectName))
             include batchFile
         }
 
