@@ -99,7 +99,7 @@ processResources {
 }
 
 jlink {
-    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    options = ['--strip-debug', '--compress', 'zip-9', '--no-header-files', '--no-man-pages']
     launcher{
         moduleName = "${MAIN_MODULE}"
         mainClassName = "${MAIN_CLASS}"
