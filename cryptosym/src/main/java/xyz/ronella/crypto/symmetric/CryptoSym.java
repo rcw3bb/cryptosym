@@ -69,6 +69,7 @@ public final class CryptoSym {
      * @param keyResolver An implementation of KeyResolver.
      * @param text The text to encrypt.
      * @return The encrypted text.
+     * @throws CryptoSymException Throws CryptoSymException
      */
     public static String encrypt(final KeyResolver keyResolver, final String text) throws CryptoSymException {
         return encrypt(keyResolver.resolve(), text);
@@ -79,6 +80,7 @@ public final class CryptoSym {
      *
      * @param text The text to encrypt.
      * @return The encrypted text.
+     * @throws CryptoSymException Throws CryptoSymException
      */
     public static String encrypt(final String text) throws CryptoSymException {
         return encrypt(new KeyChain(), text);
@@ -112,6 +114,7 @@ public final class CryptoSym {
      * @param keyResolver An implementation of KeyResolver.
      * @param encryptedText The encrypted text.
      * @return The plain text.
+     * @throws CryptoSymException Throws CryptoSymException
      */
     public static String decrypt(final KeyResolver keyResolver, final String encryptedText) throws CryptoSymException {
         return decrypt(keyResolver.resolve(), encryptedText);
@@ -122,6 +125,7 @@ public final class CryptoSym {
      *
      * @param encryptedText The encrypted text.
      * @return The plain text.
+     * @throws CryptoSymException Throws CryptoSymException
      */
     public static String decrypt(final String encryptedText) throws CryptoSymException {
         return decrypt(new KeyChain(), encryptedText);
