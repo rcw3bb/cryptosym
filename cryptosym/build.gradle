@@ -1,5 +1,7 @@
 plugins {
     id 'java-library'
+    id 'maven-publish'
+    id 'signing'
 }
 
 apply from: '../group-version.gradle'
@@ -17,4 +19,69 @@ compileJava {
                 '-d', sourceSets.main.output.classesDirs.asPath
         ]
     }
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+task testsJar(type: Jar, dependsOn: [testClasses]) {
+    archiveClassifier.set('tests')
+    from sourceSets.test.output
+}
+
+jar.finalizedBy(javadocJar, sourcesJar, testsJar)
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact testsJar
+            pom {
+                name = 'CryptoSym'
+                description = 'A lightweight symmetric encryption implementation.'
+                url = 'https://github.com/rcw3bb/cryptosym'
+                properties = [
+                        "inceptionYear": '2023'
+                ]
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://github.com/rcw3bb/cryptosym/blob/master/LICENSE.md'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'rcw3bb'
+                        name = 'Ronaldo Webb'
+                        email = 'ronaldo.c.webb@gmail.com'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/rcw3bb/cryptosym.git'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }
