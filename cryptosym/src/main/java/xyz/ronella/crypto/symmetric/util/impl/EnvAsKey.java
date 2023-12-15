@@ -8,6 +8,11 @@ import java.util.Optional;
  * @author Ron Webb
  */
 public class EnvAsKey extends AbstractKeyChain {
+
+    /**
+     * Creates an instance of EnvAsKey.
+     * @param keyHolder The name of the environment variable holding the key.
+     */
     public EnvAsKey(String keyHolder) {
         super(keyHolder);
     }

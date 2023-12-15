@@ -11,6 +11,10 @@ public class StringAsKey extends AbstractKeyChain {
 
     final private String key;
 
+    /**
+     * Creates an instance of StringAsKey.
+     * @param key The actual string key.
+     */
     public StringAsKey(String key) {
         super(null);
         this.key=key;

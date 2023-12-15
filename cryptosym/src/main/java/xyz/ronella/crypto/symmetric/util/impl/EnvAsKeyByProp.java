@@ -9,6 +9,11 @@ import java.util.Optional;
  */
 
 public class EnvAsKeyByProp extends AbstractKeyChain {
+
+    /**
+     * Creates an instance of EnvAsKeyByProp.
+     * @param keyHolder The name of the system property holding the environment variable holding the key.
+     */
     public EnvAsKeyByProp(String keyHolder) {
         super(keyHolder);
     }

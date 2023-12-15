@@ -8,6 +8,11 @@ import java.util.Optional;
  * @author Ron Webb
  */
 public class PropAsKey extends AbstractKeyChain {
+
+    /**
+     * Creates an instance of PropAsKey.
+     * @param keyHolder The name of the system property that is holding the key.
+     */
     public PropAsKey(String keyHolder) {
         super(keyHolder);
     }
