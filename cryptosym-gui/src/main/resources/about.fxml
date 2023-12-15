@@ -6,7 +6,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="274.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.ronella.crypto.symmetric.gui.controller.AboutController">
    <center>
-      <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="CryptoSym GUI&#10;&#10;A simple tool that utilizes the cryptosym library.&#10;&#10;Author: Ron Webb&#10;Since: 2023-12-12" BorderPane.alignment="CENTER" />
+      <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="CryptoSym GUI&#10;&#10;A simple tool that utilizes the cryptosym library.&#10;&#10;Author: Ron Webb&#10;Since: 2023-12-15" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
       <Button fx:id="btnClose" mnemonicParsing="false" onAction="#btnCloseAction" text="Close" BorderPane.alignment="CENTER" />
