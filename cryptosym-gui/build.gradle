@@ -46,6 +46,10 @@ processResources {
         ])
     }
 
+    filesMatching('log4j2.xml') {
+        filter(ReplaceTokens, tokens: ['project.name': project.name])
+    }
+
     def resources = ['fxml', 'xml', 'png', 'properties']
     doFirst {
         sourceSets.main.output.asList().stream()
@@ -58,6 +62,7 @@ processResources {
             copy {
                 from(sourceDir) {
                     exclude 'version.properties'
+                    exclude 'log4j2.xml'
                     include resources.stream().map{ ___ext -> "**/*.${___ext}"}.collect(Collectors.toList())
                 }
                 into(destinationDir)
@@ -74,7 +79,9 @@ processResources {
                 def fileToDelete = stream.filter{___path ->
                     Files.isRegularFile(___path)
                             && resources.stream().any {___ext -> ___path.toFile().path.endsWith(___ext)}
-                            && !___path.endsWith("version.properties")
+                            && !(___path.endsWith("version.properties")
+                                || ___path.endsWith("log4j2.xml")
+                            )
                 }.map{___path -> ___path.toFile()}
                             .collect(Collectors.toList()).toArray()
 
@@ -97,14 +104,8 @@ jlink {
         moduleName = "${MAIN_MODULE}"
         mainClassName = "${MAIN_CLASS}"
         noConsole = true
+        jvmArgs = ['-Dlog4j.configurationFile={{BIN_DIR}}\\conf\\log4j2.xml']
     }
-    mergedModule {
-        additive = true
-        uses 'org.apache.logging.log4j.spi.Provider'
-        uses 'org.apache.logging.log4j.message.ThreadDumpMessage.ThreadInfoFactory'
-        uses 'org.apache.logging.log4j.util.PropertySource'
-    }
-    forceMerge('slf4j-api','log4j-api')
     imageName = "${project.name}-${version}"
 }
 
@@ -114,10 +115,36 @@ task preparePackage(dependsOn: ['jlink']) {
         def batchFile = "${project.name}.bat"
         def batchPath = Paths.get(buildDir.absolutePath, projectName, batchFile).toFile()
 
+        def jlinkTargetDir = Paths.get(buildDir.absolutePath, projectName)
+        def jlinkConfDir = Paths.get(jlinkTargetDir.toFile().absolutePath, "conf")
+
+        def log4jFile = "log4j2.xml"
+        def log4jPath = Paths.get(jlinkConfDir.toFile().absolutePath, log4jFile).toFile()
+
+        def mainResources = sourceSets.main.resources.sourceDirectories.asPath
+        def outputResources = sourceSets.main.output.resourcesDir
+
         copy {
             from(Paths.get(buildDir.absolutePath, projectName, "bin"))
             into(Paths.get(buildDir.absolutePath, projectName))
             include batchFile
+        }
+
+        copy {
+            from(mainResources) {
+                exclude '*.fxml'
+                exclude 'icon.png'
+                exclude 'version.properties'
+                exclude 'log4j2.xml'
+            }
+            into(jlinkConfDir)
+        }
+
+        copy {
+            from (outputResources) {
+                include 'log4j2.xml'
+            }
+            into(jlinkConfDir)
         }
 
         if (batchPath.exists()) {
@@ -125,8 +152,18 @@ task preparePackage(dependsOn: ['jlink']) {
             def replaceWith = "set DIR=\"%~dp0\\bin\""
             def content = batchPath.text
             def updatedContent = content.replace(pattern, replaceWith)
-            if (!content.equals(updatedContent)) {
+            if (content != updatedContent) {
                 batchPath.write(updatedContent)
+            }
+        }
+
+        if (log4jPath.exists()) {
+            def pattern = "logs/"
+            def replaceWith = "../logs/"
+            def content = log4jPath.text
+            def updatedContent = content.replaceAll(pattern, replaceWith)
+            if (content!=updatedContent) {
+                log4jPath.write(updatedContent)
             }
         }
     }
