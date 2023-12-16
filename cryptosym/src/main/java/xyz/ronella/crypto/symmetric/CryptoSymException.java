@@ -15,4 +15,12 @@ public class CryptoSymException extends Exception {
         super(throwable);
     }
 
+    /**
+     * Creates an instance of CryptoSymException.
+     * @param message The error message.
+     */
+    public CryptoSymException(final String message) {
+        super(message);
+    }
+
 }

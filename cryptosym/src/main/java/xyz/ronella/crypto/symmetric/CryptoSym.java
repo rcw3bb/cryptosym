@@ -147,12 +147,17 @@ public final class CryptoSym {
         return ciphertext;
     }
 
-    private static byte[] extractIV(byte[] encryptedData) {
+    private static byte[] extractIV(byte[] encryptedData) throws CryptoSymException {
         final var iv = new byte[IV_SIZE_BYTE];
 
-        // Extract the IV from the combined array
-        System.arraycopy(encryptedData, 0, iv, 0, IV_SPLIT_PREFIX);
-        System.arraycopy(encryptedData, encryptedData.length - IV_SPLIT_SUFFIX, iv, IV_SPLIT_PREFIX, IV_SPLIT_SUFFIX);
+        try {
+            // Extract the IV from the combined array
+            System.arraycopy(encryptedData, 0, iv, 0, IV_SPLIT_PREFIX);
+            System.arraycopy(encryptedData, encryptedData.length - IV_SPLIT_SUFFIX, iv, IV_SPLIT_PREFIX, IV_SPLIT_SUFFIX);
+        }
+        catch (ArrayIndexOutOfBoundsException exp) {
+            throw new CryptoSymException("IV assembly failure.");
+        }
 
         return iv;
     }
