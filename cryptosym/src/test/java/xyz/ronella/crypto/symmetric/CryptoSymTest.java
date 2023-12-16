@@ -24,25 +24,25 @@ public class CryptoSymTest {
     @Test
     public void encWithNullKeyParameter() {
         final var text = "TEST_ONLY";
-        assertThrows(RuntimeException.class, ()-> CryptoSym.encrypt(new StringAsKey(null), text));
+        assertThrows(CryptoSymException.class, ()-> CryptoSym.encrypt(new StringAsKey(null), text));
     }
 
     @Test
     public void decWithNullKeyParameter() {
         final var text = "TEST_ONLY";
-        assertThrows(RuntimeException.class, ()-> CryptoSym.decrypt(new StringAsKey(null), text));
+        assertThrows(CryptoSymException.class, ()-> CryptoSym.decrypt(new StringAsKey(null), text));
     }
 
     @Test
     public void encWithNullTextParameter() {
         final var key = new StringAsKey("TEST_ONLY");
-        assertThrows(RuntimeException.class, ()-> CryptoSym.encrypt(key, null));
+        assertThrows(CryptoSymException.class, ()-> CryptoSym.encrypt(key, null));
     }
 
     @Test
     public void decWithNullTextParameter() {
         final var key = new StringAsKey("TEST_ONLY");
-        assertThrows(RuntimeException.class, ()-> CryptoSym.decrypt(key, null));
+        assertThrows(CryptoSymException.class, ()-> CryptoSym.decrypt(key, null));
     }
 
     @Test
