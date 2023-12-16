@@ -22,9 +22,6 @@ public class StringAsKey extends AbstractKeyChain {
 
     @Override
     public String resolve() {
-        final var toSuccessor = Optional.ofNullable(keyChain)
-                .orElse(new NullKeyResolver());
-
-        return Optional.ofNullable(key).orElseGet(toSuccessor::resolve);
+        return Optional.ofNullable(key).orElseGet(successorLogic());
     }
 }

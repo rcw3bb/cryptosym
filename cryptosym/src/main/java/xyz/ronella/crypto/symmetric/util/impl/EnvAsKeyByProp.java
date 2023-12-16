@@ -20,12 +20,9 @@ public class EnvAsKeyByProp extends AbstractKeyChain {
 
     @Override
     public String resolve() {
-        final var toSuccessor = Optional.ofNullable(keyChain)
-                .orElse(new NullKeyResolver());
-
         final var targetEnv = new PropAsKey(keyHolder).resolve();
         final var envValue = new EnvAsKey(targetEnv).resolve();
 
-        return Optional.ofNullable(envValue).orElseGet(toSuccessor::resolve);
+        return Optional.ofNullable(envValue).orElseGet(successorLogic());
     }
 }

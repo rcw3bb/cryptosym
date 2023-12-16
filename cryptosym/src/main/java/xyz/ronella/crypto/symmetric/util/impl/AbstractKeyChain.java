@@ -3,6 +3,7 @@ package xyz.ronella.crypto.symmetric.util.impl;
 import xyz.ronella.crypto.symmetric.util.KeyResolver;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * A partial implementation of KeyResolver that suppport chaining.
@@ -52,5 +53,13 @@ public abstract class AbstractKeyChain implements KeyResolver {
      */
     public KeyResolver getTop() {
         return top;
+    }
+
+    /**
+     * The successor resolution logic.
+     * @return The successor resolution logic.
+     */
+    protected Supplier<String> successorLogic() {
+        return () -> Optional.ofNullable(keyChain).orElse(new NullKeyResolver()).resolve();
     }
 }
