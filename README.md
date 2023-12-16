@@ -17,6 +17,44 @@ The default implementations are as follows:
 | PropAsKey(String keyHolder)      | Use this implementation if the key is being held in a system property. Where the keyHolder is the name of the system property.<br /><br />This is useful if you want to provide the key as a system property *(i.e. not the cryptosym.key)*. |
 | StringAsKey(String key)          | Use this implementation if the actual key known.             |
 
+## KeyChain Class
+
+The KeyChain class is an implementation of KeyResolver interface which probes the actual string key using the following in sequence:
+
+### 1. cryptosym.key property
+
+The `system property` that must hold the actual string key. 
+
+Use the following JVM option syntax:
+
+`-Dcryptosym.key=<STRING_KEY>`
+
+**Example**
+
+`-Dcryptosym.key=BNIu1ypTIMAAtm8nO6aGokH9+WpAPMnfb5GEArhWoAg=`
+
+### 2. cryptosym.keyholder property
+
+The `system property` that must hold the environment variable that holds the actual string key. Use this if CRYPTOSYM_KEY was already in used or you want a totally different environment to hold the actual string key.
+
+Use the following JVM option syntax:
+
+`-Dcryptosym.keyholder=<ENVIRONMENT_VARIABLE>`
+
+**Example**
+
+`-Dcryptosym.keyholder=APP_KEY`
+
+In this example the `APP_KEY` environment variable holds the actual string key.
+
+### 3. CRYPTOSYM_KEY environment variable
+
+The `environment variable` that must hold the actual string key.
+
+> Following the preceding sequence *(i.e. cryptosym.key property -> cryptosym.keyholder property -> CRYPTOSYM_KEY environment variable)*, if any one of these resolves to an actual key string. The probing stops from there. For instance, if cryptosym.key property was resolved to a valid key, the probing stops there. It will not check cryptosym.keyholder property and CRYPTOSYM_KEY environment variable at all. 
+
+> It is not required to use them all at the same time. For instance, if you already CRYPTOSYM_KEY environment variable configured, you don't need to use the other properties *(i.e. cryptosym.key property or cryptosym.keyholder property)*.
+
 ## SecretMgr Class
 
 The SecretMgr class is the one that is responsible for generating a key. 
