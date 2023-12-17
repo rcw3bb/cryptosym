@@ -83,7 +83,11 @@ The CryptoSym class is the class to use do encryption and decryption.
    | -------- | ------------------ |
    | Group    | xyz.ronella.crypto |
    | Artifact | cryptosym          |
-   | Version  | 1.0.0              |
+   | Version  | 1.0.1              |
+
+   Visit the following `maven repository` for more information about adding this as a dependency:
+
+   https://mvnrepository.com/artifact/xyz.ronella.crypto/cryptosym
 
 2. Add the following module in **module-info.java**:
 
@@ -95,7 +99,11 @@ CryptoSym-GUI is a UI to aid the generation of key and the testing of encryption
 
 ![cryptosym-gui](cryptosym-gui.png)
 
-You can build this application by following the [build](BUILD.md) documentation.
+> The version in title bar of the preceding screenshot doesn't necessary match the actual version.
+
+You can build this application by following the [build](BUILD.md) documentation or `download` the the appropriate version of the `zip package` from the following link:
+
+https://github.com/rcw3bb/cryptosym/releases
 
 ## Author
 
